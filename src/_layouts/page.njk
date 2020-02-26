@@ -1,0 +1,10 @@
+---
+layout: default
+permalink: "{{ page.filePathStem }}.html"
+---
+
+<article class="main" lang="{{ lang }}">
+  <h1>{{ renderData.title or title }}</h1>
+  {{ content | safe }}
+
+</article>

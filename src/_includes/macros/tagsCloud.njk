@@ -1,0 +1,23 @@
+{% macro tagsCloud(tags) %}
+
+{% set minSize = 0.9 %}
+{% set maxSize = 1.8 %}
+{% set minWeight = 300 %}
+{% set maxWeight = 900 %}
+
+<ol class="tagscloud__tags">
+{% for tag in tags %}
+  {% set tagUrl %}/tags/{{ tag.tag | slugify }}/{% endset %}
+  <li>
+    <a href="{{ tagUrl }}"
+      class="tag{{ tag.step }}"
+      title="{{ tag.tag }} attached to {{ tag.number }} contents"
+      style="
+        font-size: {{ (maxSize - minSize) * tag.factor + minSize }}em;
+        font-weight: {{ (maxWeight - minWeight) * tag.factor + minWeight }}"
+      rel="tag">{{ tag.tag }}</a>
+  </li>
+{% endfor %}
+</ol>
+
+{% endmacro %}

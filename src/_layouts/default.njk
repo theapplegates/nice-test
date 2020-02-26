@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% set pageExcerpt = content | excerpt %}
+  {% include "head.njk" %}
+
+  {% set section = page.outputPath | split('/') %}
+  {% set section = section[1] | replace('index.html', 'home') %}
+  <body
+    itemscope
+    itemtype="https://schema.org/{% if "about/" in page.inputPath %}aboutpage{% else %}webpage{% endif %}"
+    class="layout-{{ layout }} section-{{ section }}"
+    data-img-src="{{ page.inputPath | dirname }}/"
+    data-img-dist="{{ page.outputPath | dirname }}/"
+  >
+
+    {% include "components/svg-sprite.njk" %}
+
+    <a class="sr-only" href="#main">Jump to main content</a>
+
+    <header id="header" role="banner">
+      <div
+        class="wrap">
+        <!-- {{ page.url }} -->
+        {% if page.url == "/" %}
+          <h1 class="site_title h-card" rel="me">Nicolas Hoizey</h1>
+        {% else %}
+          <p class="site_title">
+            <a class="h-card" href="/" rel="me" title="Homepage">Nicolas Hoizey</a>
+          </p>
+        {% endif %}
+        {% include "components/search-form.njk" %}
+      </div>
+    </header>
+
+    {% include "components/navigation.njk" %}
+
+    <main id="main" role="main">
+      <div class="wrap">
+        {{ content | safe }}
+      </div>
+    </main>
+    <div class="search">
+      <div class="wrap">
+        <div class="results" id="search_results"></div>
+      </div>
+    </div>
+
+    {% include "components/footer.njk" %}
+
+    <script src="/js/additional.js" async defer></script>
+    {# <script type="module" src="/sw-window.mjs"></script> #}
+
+  {% if build.env.ELEVENTY_ENV == "production" %}
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for(let registration of registrations) {
+            registration.unregister().then(() => {
+              return self.clients.matchAll();
+            }).then((clients) => {
+              clients.forEach(client => {
+                if (client.url && 'navigate' in client) {
+                  client.navigate(client.url);
+                }
+              });
+            });
+          }
+        });
+      });
+    }
+    if ('caches' in window) {
+      caches.keys()
+        .then(function(keyList) {
+            return Promise.all(keyList.map(function(key) {
+                return caches.delete(key);
+            }));
+        })
+    }
+    </script>
+  {% else %}
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+    </script>
+  {% endif %}
+  </body>
+
+</html>

@@ -1,0 +1,51 @@
+---
+pagination:
+  data: collections.tags
+  size: 1
+  alias: tag
+  filter:
+    - all
+  addAllPagesToCollections: true
+layout: page
+renderData:
+  title: Contents tagged “{{ tag.tag }}”
+permalink: /tags/{{ tag.slug }}/
+---
+
+{% from "macros/articleCard.njk" import articleCard %}
+{% from "macros/linkCard.njk" import linkCard %}
+
+{% if tag.logo %}
+  <img src="/{{ tag.logo }}" class="logo" />
+{% endif %}
+
+{% if tag.description %}
+  {{ tag.description | markdownify | safe }}
+{% endif %}
+
+{% if tag.number > 1 %}
+  <p>There are {{ tag.number }} contents with this tag:</p>
+{% else %}
+  <p>There is only one content with this tag:</p>
+{% endif %}
+
+<ul class="list">
+  {% set contentItems = collections[ tag.tag ] %}
+  {% for item in contentItems | reverse %}
+    {% if item.data.layout == "article" %}
+      <li class="list__item list__item--large">
+        <div class="card card--article h-entry">
+          {{ articleCard(item.data.title, item.url, item.data.lang, item.date, item.data.tags, item.templateContent, webmentions ) }}
+        </div>
+      </li>
+    {% else %}
+      <li class="list__item">
+        <div class="card card--article h-entry">
+          {{ linkCard(item.data.title, item.url, item.data.link, item.data.authors, item.date, item.data.tags, webmentions) }}
+        </div>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+<p>See <a href="/tags/">all tags</a>.</p>

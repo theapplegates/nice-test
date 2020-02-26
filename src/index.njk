@@ -1,0 +1,84 @@
+---
+layout: default
+title: Home
+eleventyExcludeFromCollections: true
+---
+
+{#
+JSON-LD for:
+- Site name: https://developers.google.com/search/docs/data-types/sitename
+- Site links searchbox: https://developers.google.com/search/docs/data-types/sitelinks-searchbox
+- Social Profile Links: https://developers.google.com/search/docs/data-types/social-profile-links
+#}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Nicolas Hoizey",
+  "url": "https://nicolas-hoizey.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://nicolas-hoizey.com/search/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "sameAs": [
+    "https://twitter.com/nhoizey",
+    "https://mamot.fr/@nhoizey",
+    "https://www.flickr.com/photos/nicolas-hoizey/",
+    "https://github.com/nhoizey"
+  ]
+}
+</script>
+
+<div id="intro" class="h-card">
+  <p>My name is <a href="{{ site.url }}" class="p-name u-url u-uid" rel="me">Nicolas Hoizey</a>.</p>
+  <p class="p-note">
+    I am passionate about <strong>the Web</strong> and <strong><a href="/tags/photography/">photography</a></strong>, among <a href="/tags/">many other interests</a>.</p>
+</div>
+
+{% from "macros/articleCard.njk" import articleCard %}
+
+<h2>Latest article</h2>
+<ul class="list">
+  {% for article in collections.articles | limit(1) %}
+    <li class="list__item list__item--large">
+      <div class="card card--article h-entry">
+        {{ articleCard(article.data.title, article.url, article.data.lang, article.date, article.data.tags, article.templateContent, webmentions ) }}
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2>Noteworthy articles</h2>
+<ul class="list">
+  {% for article in collections.promoted %}
+    <li class="list__item list__item--large">
+      <div class="card card--article h-entry">
+        {{ articleCard(article.data.title, article.url, article.data.lang, article.date, article.data.tags, article.templateContent, webmentions ) }}
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+<p>Read <a href="/articles/">all articles</a>…</p>
+
+{% from "macros/linkCard.njk" import linkCard %}
+
+<h2>Recent links</h2>
+<ul class="list">
+  {% for link in collections.links | limit(6) %}
+    <li class="list__item">
+      <div class="card card--link h-entry">
+        {{ linkCard(link.data.title, link.url, link.data.link, link.data.authors, link.date, link.data.tags, webmentions) }}
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+<p>Discover <a href="/links/">all links</a>…</p>
+
+{% from "macros/tagsCloud.njk" import tagsCloud %}
+
+<h2>Main topics</h2>
+<p>These are the tags the most used on the site to set content topics:</p>
+{{ tagsCloud(collections.mainTags) }}
+<p>Browse <a href="/tags/">all tags</a>…</p>

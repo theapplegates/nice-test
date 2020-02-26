@@ -2,4 +2,3 @@ node_modules
 dist
 _logs
 _scripts
-.env

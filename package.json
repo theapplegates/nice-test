@@ -54,7 +54,7 @@
     "markdown-it-container": "~2.0",
     "markdown-it-footnote": "~3.0.2",
     "moment": "~2.24.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "node-sass": "^4.13.1",
     "path": "^0.12.7",
     "require-dir": "^1.2.0",
